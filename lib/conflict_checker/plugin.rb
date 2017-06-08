@@ -30,7 +30,7 @@ module Danger
       warn 'Trying to merge code on a Monday' if Date.today.wday == 1
     end
 
-    def test
+    def test_hoge
       fail('github not exist') unless github
     end
   end
