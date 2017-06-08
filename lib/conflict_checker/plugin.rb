@@ -27,14 +27,14 @@ module Danger
     # @return   [Array<String>]
     #
     def warn_on_mondays
-      warn 'Trying to merge code on a Monday' if Date.today.wday == 1
+      warn 'Trying to merge code on a Monday'
     end
 
     # A method that you can call from your Dangerfile
     # @return   [Array<String>]
     #
     def test_hoge
-      fail('github not exist') unless github
+      fail 'github not exist' unless github
     end
   end
 end
