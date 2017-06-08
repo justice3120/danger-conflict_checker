@@ -29,5 +29,9 @@ module Danger
     def warn_on_mondays
       warn 'Trying to merge code on a Monday' if Date.today.wday == 1
     end
+
+    def test
+      fail('github not exist') unless github
+    end
   end
 end
