@@ -33,6 +33,7 @@ module Danger
     # @return   [Array<String>]
     #
     def check_conflict()
+      puts "aaa"
       @check_results = []
 
       repo_name = github.pr_json[:base][:repo][:full_name]
