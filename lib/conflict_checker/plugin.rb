@@ -68,8 +68,8 @@ module Danger
 
             if 'patch failed' == line.split(':')[1].strip
               conflict = {
-                file: line.split(':')[2].chomp,
-                line: line.split(':')[3].chomp
+                file: line.split(':')[2].strip,
+                line: line.split(':')[3].strip.to_i
               }
               result[:conflicts] << conflict
             end
