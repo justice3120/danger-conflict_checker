@@ -31,7 +31,7 @@ module Danger
     # A method that you can call from your Dangerfile
     # @return   [Array<String>]
     #
-    def check_conflict
+    def check_conflict(dummy: nil)
       @check_results = []
 
       repo_name = github.pr_json[:base][:repo][:full_name]
@@ -82,6 +82,8 @@ module Danger
 
         @check_results << result
       end
+
+      @check_results 
     end
   end
 end
