@@ -29,7 +29,6 @@ module Danger
     # @return   [Array<Hash>]
     #
     def check_conflict()
-      puts "aaa"
       @check_results = []
 
       repo_name = github.pr_json[:base][:repo][:full_name]
@@ -64,6 +63,8 @@ module Danger
           f.sync = true
           f.puts patch
           out, s = Open3.capture2e("git apply --check #{f.path}")
+
+          p out
 
           out.each_line do |line|
 
