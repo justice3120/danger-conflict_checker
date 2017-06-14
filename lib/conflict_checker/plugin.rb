@@ -1,5 +1,6 @@
 require 'shellwords'
 require 'tempfile'
+require "open3"
 require 'securerandom'
 
 module Danger
@@ -66,14 +67,11 @@ module Danger
           patch = `git format-patch #{base}..#{branch2} --stdout`.chomp
           f.sync = true
           f.puts patch
-          output = `git apply --check #{f.path}`
+          out, s = Open3.capture2e("git apply --check #{f.path}")
 
-          p output
+          p out
 
-          output.each_line do |line|
-            puts "bbb"
-            p line
-            p line.split(':')[1].chomp
+          out.each_line do |line|
 
             if 'patch failed' == line.split(':')[1].chomp
               conflict = {
