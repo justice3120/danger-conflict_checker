@@ -1,1 +1,1 @@
-p conflict_checker.check_conflict()
+conflict_checker.check_conflict()

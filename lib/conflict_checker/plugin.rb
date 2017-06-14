@@ -62,12 +62,14 @@ module Danger
         base = `git merge-base #{branch1} #{branch2}`.chomp
 
         Tempfile.open('tmp') do |f|
+          puts "aaaa"
           patch = `git format-patch #{base}..#{branch2} --stdout`.chomp
           f.puts patch
           f.close
           output = `git apply --check #{f.path}`
 
           output.each_line do |line|
+            puts "bbb"
             p line
             p line.split(':')[1].chomp
 
