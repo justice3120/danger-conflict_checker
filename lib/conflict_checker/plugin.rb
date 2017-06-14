@@ -32,7 +32,7 @@ module Danger
     # A method that you can call from your Dangerfile
     # @return   [Array<String>]
     #
-    def check_conflict(dummy=nil)
+    def check_conflict()
       @check_results = []
 
       repo_name = github.pr_json[:base][:repo][:full_name]
@@ -63,13 +63,10 @@ module Danger
         base = `git merge-base #{branch1} #{branch2}`.chomp
 
         Tempfile.open('tmp') do |f|
-          puts "aaaa"
           patch = `git format-patch #{base}..#{branch2} --stdout`.chomp
           f.sync = true
           f.puts patch
           out, s = Open3.capture2e("git apply --check #{f.path}")
-
-          p out
 
           out.each_line do |line|
 
