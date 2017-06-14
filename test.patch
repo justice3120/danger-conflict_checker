@@ -1,0 +1,18 @@
+From e2d672cb1cfc3d6bb670b4c0d95b2f14866eff82 Mon Sep 17 00:00:00 2001
+From: Masayoshi Sakamoto <masayoshi.sakamoto@dena.com>
+Date: Tue, 13 Jun 2017 20:01:14 +0900
+Subject: [PATCH] fork
+
+---
+ hoge | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/hoge b/hoge
+index 2262de0..f468e9a 100644
+--- a/hoge
++++ b/hoge
+@@ -1 +1 @@
+-hoge
++fork
+-- 
+2.12.2
