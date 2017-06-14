@@ -61,7 +61,7 @@ module Danger
 
         base = `git merge-base #{branch1} #{branch2}`.chomp
 
-        Tempfile.open do |f|
+        Tempfile.open('tmp') do |f|
           patch = `git format-patch #{base}..#{branch2} --stdout`.chomp
           f.puts patch
           f.close
