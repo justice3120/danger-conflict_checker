@@ -64,11 +64,9 @@ module Danger
           f.puts patch
           out, s = Open3.capture2e("git apply --check #{f.path}")
 
-          p out
-
           out.each_line do |line|
 
-            if 'patch failed' == line.split(':')[1].chomp
+            if 'patch failed' == line.split(':')[1].strip
               conflict = {
                 file: line.split(':')[2].chomp,
                 line: line.split(':')[3].chomp
