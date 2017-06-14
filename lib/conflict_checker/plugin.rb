@@ -64,9 +64,11 @@ module Danger
         Tempfile.open('tmp') do |f|
           puts "aaaa"
           patch = `git format-patch #{base}..#{branch2} --stdout`.chomp
+          f.sync = true
           f.puts patch
-          f.close
           output = `git apply --check #{f.path}`
+
+          p output
 
           output.each_line do |line|
             puts "bbb"
