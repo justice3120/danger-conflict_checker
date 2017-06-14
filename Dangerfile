@@ -1,1 +1,1 @@
-p conflick_checker.check_results
+p conflict_checker.check_results

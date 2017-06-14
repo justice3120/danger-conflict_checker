@@ -15,7 +15,7 @@ module Danger
   #
   # @example Ensure people are well warned about merging on Mondays
   #
-  #          conflick_checker.check_conflict
+  #          conflict_checker.check_conflict
   #
   # @see  Masayoshi Sakamoto/danger-conflict_checker
   # @tags conflict
