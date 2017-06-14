@@ -4,21 +4,13 @@ require "open3"
 require 'securerandom'
 
 module Danger
-  # This is your plugin class. Any attributes or methods you expose here will
-  # be available from within your Dangerfile.
-  #
-  # To be published on the Danger plugins site, you will need to have
-  # the public interface documented. Danger uses [YARD](http://yardoc.org/)
-  # for generating documentation from your plugin source, and you can verify
-  # by running `danger plugins lint` or `bundle exec rake spec`.
-  #
-  # You should replace these comments with a public description of your library.
+  # ToDo
   #
   # @example Ensure people are well warned about merging on Mondays
   #
   #          conflict_checker.check_conflict
   #
-  # @see  Masayoshi Sakamoto/danger-conflict_checker
+  # @see  justice3120/danger-conflict_checker
   # @tags conflict
   #
   class DangerConflictChecker < Plugin
@@ -29,8 +21,12 @@ module Danger
     # @return   [Array<String>]
     attr_accessor :check_results
 
+    def initialize(dangerfile)
+      super(dangerfile)
+    end
+
     # A method that you can call from your Dangerfile
-    # @return   [Array<String>]
+    # @return   [Array<Hash>]
     #
     def check_conflict()
       puts "aaa"
