@@ -66,9 +66,11 @@ module Danger
           f.puts patch
           f.close
           output = `git apply --check #{f.path}`
-          p output
 
           output.each_line do |line|
+            p line
+            p line.split(':')[1].chomp
+
             if 'patch failed' == line.split(':')[1].chomp
               conflict = {
                 file: line.split(':')[2].chomp,
