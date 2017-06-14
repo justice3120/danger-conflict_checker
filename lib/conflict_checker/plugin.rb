@@ -65,7 +65,8 @@ module Danger
           patch = `git format-patch #{base}..#{branch2} --stdout`.chomp
           f.puts patch
           f.close
-          output = `git apply --check #{f.path}`.chomp
+          output = `git apply --check #{f.path}`
+          p output
 
           output.each_line do |line|
             if 'patch failed' == line.split(':')[1].chomp
@@ -76,6 +77,8 @@ module Danger
               result[:conflicts] << conflict
             end
           end
+
+          result[:mergeable] = result[:conflicts].empty?
         end
 
         g.remove_remote(uuid)
