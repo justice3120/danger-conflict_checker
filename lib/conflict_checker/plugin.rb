@@ -1,40 +1,106 @@
+require 'shellwords'
+require 'tempfile'
+require "open3"
+require 'securerandom'
+
 module Danger
-  # This is your plugin class. Any attributes or methods you expose here will
-  # be available from within your Dangerfile.
+  # Check and warn the conflict between PRs.
   #
-  # To be published on the Danger plugins site, you will need to have
-  # the public interface documented. Danger uses [YARD](http://yardoc.org/)
-  # for generating documentation from your plugin source, and you can verify
-  # by running `danger plugins lint` or `bundle exec rake spec`.
+  # @example Get information about the conflict between PRs.
+  #          conflict_checker.check_conflict
+  # @example Warn in PR comment about the conflict between PRs.
+  #          conflict_checker.check_conflict_and_comment
   #
-  # You should replace these comments with a public description of your library.
-  #
-  # @example Ensure people are well warned about merging on Mondays
-  #
-  #          my_plugin.warn_on_mondays
-  #
-  # @see  Masayoshi Sakamoto/danger-conflict_checker
-  # @tags monday, weekends, time, rattata
+  # @see  justice3120/danger-conflict_checker
+  # @tags pr conflict
   #
   class DangerConflictChecker < Plugin
 
-    # An attribute that you can read/write from your Dangerfile
-    #
-    # @return   [Array<String>]
-    attr_accessor :my_attribute
-
-    # A method that you can call from your Dangerfile
-    # @return   [Array<String>]
-    #
-    def warn_on_mondays
-      warn 'Trying to merge code on a Monday'
+    def initialize(dangerfile)
+      super(dangerfile)
     end
 
-    # A method that you can call from your Dangerfile
-    # @return   [Array<String>]
+    # Get information about the conflict between PRs
+    # @return   [Array<Hash>]
     #
-    def test_hoge
-      fail 'github not exist' unless github
+    def check_conflict()
+      check_results = []
+
+      repo_name = github.pr_json[:base][:repo][:full_name]
+
+      pull_requests = github.api.pull_requests(repo_name).select do |pr|
+        pr[:id] != github.pr_json[:id] && pr[:base][:label] == github.pr_json[:base][:label]
+      end
+
+      return if pull_requests.empty?
+
+      g = Git.open(Dir.pwd)
+
+      pull_requests.each do |pr|
+        result = {
+          pull_request: pr,
+          mergeable: true,
+          conflicts: []
+        }
+
+        uuid = SecureRandom.uuid
+
+        r = g.add_remote(uuid, pr[:head][:repo][:ssh_url])
+        r.fetch()
+
+        branch1 = github.pr_json[:head][:ref]
+        branch2 = "#{uuid}/#{pr[:head][:ref]}"
+
+        base = `git merge-base #{branch1} #{branch2}`.chomp
+
+        Tempfile.open('tmp') do |f|
+          patch = `git format-patch #{base}..#{branch2} --stdout`.chomp
+          f.sync = true
+          f.puts patch
+          out, s = Open3.capture2e("git apply --check #{f.path}")
+
+          out.each_line do |line|
+
+            if 'patch failed' == line.split(':')[1].strip
+              conflict = {
+                file: line.split(':')[2].strip,
+                line: line.split(':')[3].strip.to_i
+              }
+              result[:conflicts] << conflict
+            end
+          end
+
+          result[:mergeable] = result[:conflicts].empty?
+        end
+
+        g.remove_remote(uuid)
+
+        check_results << result
+      end
+
+      check_results
+    end
+
+
+    # Warn in PR comment about the conflict between PRs
+    # @return   [Array<Hash>]
+    #
+    def check_conflict_and_comment()
+      results = check_conflict()
+
+      results.each do |result|
+        message = "<p>This PR conflicts with <a href=\"#{result[:pull_request][:html_url]}\">##{result[:pull_request][:number]}</a>.</p>"
+        table = '<table><thead><tr><th width="100%">File</th><th>Line</th></tr></thead><tbody>' + result[:conflicts].map do |conflict|
+          file = conflict[:file]
+          line = conflict[:line]
+          line_link = "#{result[:pull_request][:head][:repo][:html_url]}/blob/#{result[:pull_request][:head][:ref]}/#{file}#L#{line}"
+          "<tr><td>#{file}</td><td><a href=\"#{line_link}\">#L#{line}</a></td></tr>"
+        end.join('') + '</tbody></table>'
+        puts (message + table)
+        warn("<div>" + message + table + "</div>")
+      end
+
+      results
     end
   end
 end
