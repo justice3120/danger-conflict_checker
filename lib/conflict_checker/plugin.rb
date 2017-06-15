@@ -84,9 +84,17 @@ module Danger
       results = check_conflict()
 
       results.each do |result|
-
-        warn("This PR conflicts with <a href=\"#{result[:pull_request][:html_url]}\">##{result[:pull_request][:number]}</a>")
+        message = "<p>This PR conflicts with <a href=\"#{result[:pull_request][:html_url]}\">##{result[:pull_request][:number]}</a>.</p>"
+        table = '<table><thead><tr><th width="100%">File</th><th>Line</th></tr></thead><tbody>' + result[:conflicts].map do |conflict|
+          file = conflict[:file]
+          line = conflict[:line]
+          line_link = "#{result[:pull_request][:head][:repo][:html_url]}/blob/#{result[:pull_request][:head][:ref]}/#{file}#L#{line}"
+          "<tr><td>#{file}</td><td><a href=\"#{line_link}\">#{line}</a></td></tr>"
+        end.join('') + '</tbody></table>'
+        warn(message + table)
       end
+
+      results
     end
   end
 end
