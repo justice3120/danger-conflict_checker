@@ -89,8 +89,9 @@ module Danger
           file = conflict[:file]
           line = conflict[:line]
           line_link = "#{result[:pull_request][:head][:repo][:html_url]}/blob/#{result[:pull_request][:head][:ref]}/#{file}#L#{line}"
-          "<tr><td>#{file}</td><td><a href=\"#{line_link}\">#{line}</a></td></tr>"
+          "<tr><td>#{file}</td><td><a href=\"#{line_link}\">#L#{line}</a></td></tr>"
         end.join('') + '</tbody></table>'
+        puts (message + table)
         warn(message + table)
       end
 
