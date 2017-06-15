@@ -92,7 +92,7 @@ module Danger
           "<tr><td>#{file}</td><td><a href=\"#{line_link}\">#L#{line}</a></td></tr>"
         end.join('') + '</tbody></table>'
         puts (message + table)
-        warn(message + table)
+        warn("<div>" + message + table + "</div>")
       end
 
       results
