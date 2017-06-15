@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = ConflictChecker::VERSION
   spec.authors       = ['Masayoshi Sakamoto']
   spec.email         = ['masayoshi.sakamoto@dena.com']
-  spec.description   = %q{A short description of danger-conflict_checker.}
-  spec.summary       = %q{A longer description of danger-conflict_checker.}
-  spec.homepage      = 'https://github.com/Masayoshi Sakamoto/danger-conflict_checker'
+  spec.description   = "Warn about the conflict between PRs."
+  spec.summary       = "This is plugin for Danger that warn about the conflict between PRs."
+  spec.homepage      = 'https://github.com/justice3120/danger-conflict_checker'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)

@@ -4,14 +4,15 @@ require "open3"
 require 'securerandom'
 
 module Danger
-  # ToDo
+  # Check and warn the conflict between PRs.
   #
-  # @example Ensure people are well warned about merging on Mondays
-  #
+  # @example Get information about the conflict between PRs.
   #          conflict_checker.check_conflict
+  # @example Warn in PR comment about the conflict between PRs.
+  #          conflict_checker.check_conflict_and_comment
   #
   # @see  justice3120/danger-conflict_checker
-  # @tags conflict
+  # @tags pr conflict
   #
   class DangerConflictChecker < Plugin
 
@@ -19,7 +20,7 @@ module Danger
       super(dangerfile)
     end
 
-    # A method that you can call from your Dangerfile
+    # Get information about the conflict between PRs
     # @return   [Array<Hash>]
     #
     def check_conflict()
@@ -80,6 +81,10 @@ module Danger
       check_results
     end
 
+
+    # Warn in PR comment about the conflict between PRs
+    # @return   [Array<Hash>]
+    #
     def check_conflict_and_comment()
       results = check_conflict()
 
