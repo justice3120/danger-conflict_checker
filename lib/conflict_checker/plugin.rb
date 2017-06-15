@@ -14,12 +14,6 @@ module Danger
   # @tags conflict
   #
   class DangerConflictChecker < Plugin
-    # Allows you to disable a collection of linters from running. Doesn't work yet.
-    # You can get a list of [them here](https://github.com/amperser/proselint#checks)
-    # defaults to `["misc.scare_quotes", "typography.symbols"]` when it's nil.
-    #
-    # @return   [Array<String>]
-    attr_accessor :check_results
 
     def initialize(dangerfile)
       super(dangerfile)
@@ -29,7 +23,7 @@ module Danger
     # @return   [Array<Hash>]
     #
     def check_conflict()
-      @check_results = []
+      check_results = []
 
       repo_name = github.pr_json[:base][:repo][:full_name]
 
@@ -80,10 +74,19 @@ module Danger
 
         g.remove_remote(uuid)
 
-        @check_results << result
+        check_results << result
       end
 
-      @check_results
+      check_results
+    end
+
+    def check_conflict_and_comment()
+      results = check_conflict()
+
+      results.each do |result|
+
+        warn("This PR conflicts with <a href=\"#{result[:pull_request][:html_url]}\">##{result[:pull_request][:number]}</a>")
+      end
     end
   end
 end
