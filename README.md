@@ -2,7 +2,6 @@
 
 Check whether Pull Request with the same destination conflicts and warn.
 
-
 [Exmple Pull Request message](https://github.com/justice3120/danger-conflict_checker-example/pull/4)
 
 ## Installation
