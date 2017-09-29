@@ -32,7 +32,7 @@ module Danger
         pr[:id] != github.pr_json[:id] && pr[:base][:label] == github.pr_json[:base][:label]
       end
 
-      return if pull_requests.empty?
+      return check_results if pull_requests.empty?
 
       g = Git.open(Dir.pwd)
 
