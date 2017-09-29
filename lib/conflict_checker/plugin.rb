@@ -4,7 +4,7 @@ require "open3"
 require 'securerandom'
 
 module Danger
-  # Check and warn the conflict between PRs.
+  # Check whether Pull Request with the same destination conflicts and warn.
   #
   # @example Get information about the conflict between PRs.
   #          conflict_checker.check_conflict
