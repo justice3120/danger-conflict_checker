@@ -4,7 +4,7 @@ require "open3"
 require 'securerandom'
 
 module Danger
-  # Check and warn the conflict between PRs.
+  # Check whether Pull Request with the same destination conflicts and warn.
   #
   # @example Get information about the conflict between PRs.
   #          conflict_checker.check_conflict
@@ -32,7 +32,7 @@ module Danger
         pr[:id] != github.pr_json[:id] && pr[:base][:label] == github.pr_json[:base][:label]
       end
 
-      return if pull_requests.empty?
+      return check_results if pull_requests.empty?
 
       g = Git.open(Dir.pwd)
 
@@ -89,6 +89,7 @@ module Danger
       results = check_conflict()
 
       results.each do |result|
+        next if result[:mergeable]
         message = "<p>This PR conflicts with <a href=\"#{result[:pull_request][:html_url]}\">##{result[:pull_request][:number]}</a>.</p>"
         table = '<table><thead><tr><th width="100%">File</th><th>Line</th></tr></thead><tbody>' + result[:conflicts].map do |conflict|
           file = conflict[:file]
