@@ -89,6 +89,7 @@ module Danger
       results = check_conflict()
 
       results.each do |result|
+        next if result[:mergeable]
         message = "<p>This PR conflicts with <a href=\"#{result[:pull_request][:html_url]}\">##{result[:pull_request][:number]}</a>.</p>"
         table = '<table><thead><tr><th width="100%">File</th><th>Line</th></tr></thead><tbody>' + result[:conflicts].map do |conflict|
           file = conflict[:file]
